@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/google/uuid"
+	"github.com/jsnctl/hypervector/pkg/data"
 	"time"
 )
 
@@ -17,21 +18,6 @@ func NewProject(name string) *Project {
 	project.Added = time.Now()
 	project.ID = uuid.New()
 	return &project
-}
-
-type Definition struct {
-	ID       uuid.UUID `json:"id"`
-	Name     string
-	Added    time.Time
-	Features []*Feature `json:"features"`
-	N        int        `json:"N"`
-}
-
-func NewDefinition(name string) *Definition {
-	definition := Definition{Name: name}
-	definition.Added = time.Now()
-	definition.ID = uuid.New()
-	return &definition
 }
 
 type Feature struct {
@@ -55,6 +41,6 @@ const (
 )
 
 type Distribution struct {
-	Type       FeatureType            `json:"type"`
-	Parameters map[string]interface{} `json:"parameters"`
+	Type       func(opts data.DistributionOpts) *[]float64 `json:"type"`
+	Parameters map[string]any
 }

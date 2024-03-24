@@ -1,20 +1,13 @@
-package server
+package test
 
 import (
-	"fmt"
 	"github.com/jsnctl/hypervector/pkg/data"
 	"github.com/jsnctl/hypervector/pkg/model"
-	"log"
-	"net/http"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func RunServer() {
-	http.HandleFunc("/", dummyHandler)
-	log.Fatal(http.ListenAndServe(":8000", nil))
-}
-
-func dummyHandler(w http.ResponseWriter, r *http.Request) {
-	// taken from test case for now
+func TestDefinition(t *testing.T) {
 	definition := model.NewDefinition("test")
 	definition.N = 100
 	featureA := model.Feature{
@@ -40,5 +33,14 @@ func dummyHandler(w http.ResponseWriter, r *http.Request) {
 	definition.Features = []*model.Feature{&featureA, &featureB}
 
 	results := definition.Generate()
-	fmt.Fprintf(w, fmt.Sprint(results))
+
+	assert.IsType(t, &model.Definition{}, definition)
+	assert.NotNil(t, results)
+
+	x, y := results.Shape()
+	assert.Equal(t, 100, x)
+	assert.Equal(t, 2, y)
+
+	assert.IsType(t, float64(0), (*results)[0][0])
+	assert.IsType(t, int(0.0), (*results)[0][1])
 }
