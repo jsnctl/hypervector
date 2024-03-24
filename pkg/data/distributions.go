@@ -6,8 +6,8 @@ import (
 )
 
 type DistributionOpts struct {
-	Seed  int64
-	N     int64
+	Seed  int
+	N     int
 	Mu    float64
 	Sigma float64
 }
