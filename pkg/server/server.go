@@ -1,44 +1,44 @@
 package server
 
 import (
-	"fmt"
-	"github.com/jsnctl/hypervector/pkg/data"
+	"encoding/json"
 	"github.com/jsnctl/hypervector/pkg/model"
 	"log"
 	"net/http"
 )
 
-func RunServer() {
-	http.HandleFunc("/", dummyHandler)
+type Server struct {
+	Repository *Repository
+}
+
+func NewServer(repository Repository) *Server {
+	if repository == nil {
+		repository = NewInMemoryRepository()
+	}
+	return &Server{
+		Repository: &repository,
+	}
+}
+
+func (s *Server) bootstrapData() {
+	(*s.Repository).AddDefinition(model.NewDefinition("test"))
+}
+
+func (s *Server) RunServer() {
+	s.bootstrapData()
+	http.Handle("/definitions", definitionHandler(s.Repository))
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 
-func dummyHandler(w http.ResponseWriter, r *http.Request) {
-	// taken from test case for now
-	definition := model.NewDefinition("test")
-	definition.N = 100
-	featureA := model.Feature{
-		Type: model.FloatFeature,
-		Distribution: model.Distribution{
-			Type: data.Gaussian,
-			Parameters: map[string]any{
-				"sigma": 10.0,
-				"mu":    1.0,
-			},
-		},
+func definitionHandler(repo *Repository) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		switch r.Method {
+		case http.MethodGet:
+			definitions := (*repo).GetAllDefinitions()
+			json.NewEncoder(w).Encode(definitions)
+		}
 	}
-	featureB := model.Feature{
-		Type: model.IntegerFeature,
-		Distribution: model.Distribution{
-			Type: data.Gaussian,
-			Parameters: map[string]any{
-				"sigma": 1.0,
-				"mu":    10.0,
-			},
-		},
-	}
-	definition.Features = []*model.Feature{&featureA, &featureB}
-
-	results := definition.Generate()
-	fmt.Fprintf(w, fmt.Sprint(results))
+	return http.HandlerFunc(fn)
 }

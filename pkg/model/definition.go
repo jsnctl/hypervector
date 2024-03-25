@@ -13,9 +13,9 @@ func (r *Vector) Shape() (int, int) {
 }
 
 type Definition struct {
-	ID       uuid.UUID `json:"id"`
-	Name     string
-	Added    time.Time
+	ID       uuid.UUID  `json:"id"`
+	Name     string     `json:"name"`
+	Added    time.Time  `json:"added"`
 	Features []*Feature `json:"features"`
 	N        int        `json:"N"`
 }
