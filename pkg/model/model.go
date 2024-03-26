@@ -21,12 +21,12 @@ func NewProject(name string) *Project {
 }
 
 type Feature struct {
-	ID           uuid.UUID    `json:"id"`
-	Type         FeatureType  `json:"type"`
-	Distribution Distribution `json:"distribution"`
+	ID           uuid.UUID         `json:"id"`
+	Type         FeatureType       `json:"type"`
+	Distribution data.Distribution `json:"distribution"`
 }
 
-func NewFeature(featureType FeatureType, distribution Distribution) *Feature {
+func NewFeature(featureType FeatureType, distribution data.Distribution) *Feature {
 	feature := Feature{Type: featureType, Distribution: distribution}
 	feature.ID = uuid.New()
 	return &feature
@@ -39,8 +39,3 @@ const (
 	FloatFeature               = "FLOAT"
 	StringFeature              = "STRING"
 )
-
-type Distribution struct {
-	Type       func(opts data.DistributionOpts) *[]float64 `json:"type"`
-	Parameters map[string]any
-}

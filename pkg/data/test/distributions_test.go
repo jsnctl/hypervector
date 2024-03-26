@@ -19,9 +19,9 @@ func TestGaussian(t *testing.T) {
 
 	for i := 0; i < numberOfTests; i++ {
 		opts := data.DistributionOpts{
-			Seed: seed, N: N, Mu: mu, Sigma: sigma,
+			Seed: seed, Mu: mu, Sigma: sigma,
 		}
-		distribution := data.Gaussian(opts)
+		distribution := data.Gaussian(N, opts)
 		mean := helpers.Mean(distribution)
 
 		testMeans[i] = mean

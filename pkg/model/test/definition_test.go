@@ -12,21 +12,21 @@ func TestDefinition(t *testing.T) {
 	definition.N = 100
 	featureA := model.Feature{
 		Type: model.FloatFeature,
-		Distribution: model.Distribution{
-			Type: data.Gaussian,
-			Parameters: map[string]any{
-				"sigma": 10.0,
-				"mu":    1.0,
+		Distribution: data.Distribution{
+			Type: data.GaussianType,
+			Parameters: data.DistributionOpts{
+				Sigma: 10.0,
+				Mu:    1.0,
 			},
 		},
 	}
 	featureB := model.Feature{
 		Type: model.IntegerFeature,
-		Distribution: model.Distribution{
-			Type: data.Gaussian,
-			Parameters: map[string]any{
-				"sigma": 1.0,
-				"mu":    10.0,
+		Distribution: data.Distribution{
+			Type: data.GaussianType,
+			Parameters: data.DistributionOpts{
+				Sigma: 1.0,
+				Mu:    10.0,
 			},
 		},
 	}

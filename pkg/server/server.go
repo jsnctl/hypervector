@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/jsnctl/hypervector/pkg/data"
 	"github.com/jsnctl/hypervector/pkg/model"
 	"log"
 	"net/http"
@@ -21,7 +22,13 @@ func NewServer(repository Repository) *Server {
 }
 
 func (s *Server) bootstrapData() {
-	(*s.Repository).AddDefinition(model.NewDefinition("test"))
+	definition := model.NewDefinition("test")
+	definition.Features = []*model.Feature{
+		model.NewFeature(model.IntegerFeature, data.IdentityGaussianDistribution),
+		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
+		model.NewFeature(model.IntegerFeature, data.IdentityGaussianDistribution),
+	}
+	(*s.Repository).AddDefinition(definition)
 }
 
 func (s *Server) RunServer() {
@@ -37,7 +44,11 @@ func definitionHandler(repo *Repository) http.Handler {
 		switch r.Method {
 		case http.MethodGet:
 			definitions := (*repo).GetAllDefinitions()
-			json.NewEncoder(w).Encode(definitions)
+			js, err := json.Marshal(definitions)
+			if err != nil {
+				println(err.Error())
+			}
+			w.Write(js)
 		}
 	}
 	return http.HandlerFunc(fn)

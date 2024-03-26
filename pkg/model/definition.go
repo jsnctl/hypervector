@@ -16,8 +16,8 @@ type Definition struct {
 	ID       uuid.UUID  `json:"id"`
 	Name     string     `json:"name"`
 	Added    time.Time  `json:"added"`
-	Features []*Feature `json:"features"`
 	N        int        `json:"N"`
+	Features []*Feature `json:"features"`
 }
 
 func NewDefinition(name string) *Definition {
@@ -30,13 +30,8 @@ func NewDefinition(name string) *Definition {
 func (d *Definition) Generate() *Vector {
 	fv := make(Vector, d.N)
 	for f, feature := range d.Features {
-		opts := data.DistributionOpts{
-			Seed:  0,
-			Mu:    feature.Distribution.Parameters["mu"].(float64),
-			Sigma: feature.Distribution.Parameters["sigma"].(float64),
-			N:     d.N,
-		}
-		distribution := data.Gaussian(opts)
+		fn := data.DistributionLookup[feature.Distribution.Type]
+		distribution := fn(d.N, feature.Distribution.Parameters)
 		for i, value := range *distribution {
 			if f == 0 {
 				fv[i] = make([]interface{}, len(d.Features))
