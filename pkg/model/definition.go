@@ -12,6 +12,11 @@ func (r *Vector) Shape() (int, int) {
 	return len(*r), len((*r)[0])
 }
 
+type VectorResult struct {
+	Definition string  `json:"definitionId"`
+	Vector     *Vector `json:"vector"`
+}
+
 type Definition struct {
 	ID       uuid.UUID  `json:"id"`
 	Name     string     `json:"name"`

@@ -1,13 +1,14 @@
 package server
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"github.com/jsnctl/hypervector/pkg/model"
 )
 
 type Repository interface {
 	AddDefinition(definition *model.Definition)
-	GetDefinition(id uuid.UUID) *model.Definition
+	GetDefinition(id uuid.UUID) (*model.Definition, error)
 	GetAllDefinitions() []model.Definition
 }
 
@@ -26,8 +27,12 @@ func (r InMemoryRepository) AddDefinition(definition *model.Definition) {
 	r.Definitions[definition.ID] = definition
 }
 
-func (r InMemoryRepository) GetDefinition(id uuid.UUID) *model.Definition {
-	return r.Definitions[id]
+func (r InMemoryRepository) GetDefinition(id uuid.UUID) (*model.Definition, error) {
+	definition, ok := r.Definitions[id]
+	if ok {
+		return definition, nil
+	}
+	return nil, errors.New("definition not found")
 }
 
 func (r InMemoryRepository) GetAllDefinitions() []model.Definition {
