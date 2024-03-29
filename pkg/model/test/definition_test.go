@@ -23,7 +23,7 @@ func TestDefinition(t *testing.T) {
 	featureB := model.Feature{
 		Type: model.IntegerFeature,
 		Distribution: data.Distribution{
-			Type: data.GaussianType,
+			Type: data.DiscreteGaussianType,
 			Parameters: data.DistributionOpts{
 				Sigma: 1.0,
 				Mu:    10.0,

@@ -37,14 +37,16 @@ func (d *Definition) Generate() *Vector {
 	for f, feature := range d.Features {
 		fn := data.DistributionLookup[feature.Distribution.Type]
 		distribution := fn(d.N, feature.Distribution.Parameters)
-		for i, value := range *distribution {
+		for i, value := range distribution.Values {
 			if f == 0 {
 				fv[i] = make([]interface{}, len(d.Features))
 			}
 			if feature.Type == IntegerFeature {
-				fv[i][f] = int(value)
-			} else {
-				fv[i][f] = value
+				fv[i][f] = value.(int)
+			} else if feature.Type == FloatFeature {
+				fv[i][f] = value.(float64)
+			} else if feature.Type == StringFeature {
+				fv[i][f] = value.(string)
 			}
 		}
 	}
