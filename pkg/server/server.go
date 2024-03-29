@@ -28,10 +28,10 @@ func (s *Server) bootstrapData() {
 	definition.N = 1000
 	definition.Features = []*model.Feature{
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
+		model.NewFeature(model.FloatFeature, data.GaussianFactory(0.0, 10.0)),
+		model.NewFeature(model.IntegerFeature, data.GaussianFactory(10.0, 50.0)),
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
-		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
-		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
-		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
+		model.NewFeature(model.FloatFeature, data.GaussianFactory(0.01, 0.5)),
 	}
 	(*s.Repository).AddDefinition(definition)
 }
