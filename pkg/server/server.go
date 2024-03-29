@@ -25,8 +25,10 @@ func NewServer(repository Repository) *Server {
 
 func (s *Server) bootstrapData() {
 	definition := model.NewDefinition("test")
-	definition.N = 10000
+	definition.N = 1000
 	definition.Features = []*model.Feature{
+		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
+		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
