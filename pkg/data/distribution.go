@@ -16,7 +16,6 @@ const (
 )
 
 type DistributionOpts struct {
-	Seed       int64   `json:"seed"`
 	Mu         float64 `json:"mu"`
 	Sigma      float64 `json:"sigma"`
 	Categories []Category
@@ -42,7 +41,7 @@ func (r *Result) GetString() *[]string {
 	return &strings
 }
 
-var DistributionLookup = map[DistributionType]func(int, DistributionOpts) *Result{
+var DistributionLookup = map[DistributionType]func(int, int64, DistributionOpts) *Result{
 	GaussianType:         Gaussian,
 	DiscreteGaussianType: DiscreteGaussian,
 	CategoricalType:      CategoryChoice,

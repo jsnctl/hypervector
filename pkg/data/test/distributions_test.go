@@ -15,13 +15,12 @@ func TestGaussian(t *testing.T) {
 	mu := 10.0
 	sigma := 1.0
 	N := 5000 + rand.Intn(1000)
-	seed := int64(rand.Int())
 
 	for i := 0; i < numberOfTests; i++ {
 		opts := data.DistributionOpts{
-			Seed: seed, Mu: mu, Sigma: sigma,
+			Mu: mu, Sigma: sigma,
 		}
-		distribution := data.Gaussian(N, opts)
+		distribution := data.Gaussian(N, 0, opts)
 		mean := helpers.Mean(distribution.GetFloat64())
 
 		testMeans[i] = mean
@@ -38,10 +37,8 @@ func TestCategoryChoice(t *testing.T) {
 		{Value: "False", Probability: 0.8},
 	}
 	N := 5000 + rand.Intn(1000)
-	seed := int64(rand.Int())
 
-	distribution := data.CategoryChoice(N, data.DistributionOpts{
-		Seed:       seed,
+	distribution := data.CategoryChoice(N, 0, data.DistributionOpts{
 		Categories: categories,
 	})
 	vector := distribution.GetString()

@@ -5,9 +5,9 @@ import (
 	"math/rand"
 )
 
-func Gaussian(N int, opts DistributionOpts) *Result {
+func Gaussian(N int, seed int64, opts DistributionOpts) *Result {
 	// box-muller transform
-	rng := rand.New(rand.NewSource(opts.Seed))
+	rng := rand.New(rand.NewSource(seed))
 	var result Result
 	for i := 0; i < int(N/2); i++ {
 		left := rng.Float64()

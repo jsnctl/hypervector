@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/google/uuid"
 	"github.com/jsnctl/hypervector/pkg/data"
+	"hash/fnv"
 )
 
 // Ensemble corresponds to a single test fixture instance of
@@ -29,7 +30,8 @@ func (e *Ensemble) Generate() *Vector {
 	fv := make(Vector, e.N)
 	for f, feature := range e.definition.Features {
 		fn := data.DistributionLookup[feature.Distribution.Type]
-		distribution := fn(e.N, feature.Distribution.Parameters)
+		seed := ensembleIdToRNGSeed(e.ID)
+		distribution := fn(e.N, seed, feature.Distribution.Parameters)
 		for i, value := range distribution.Values {
 			if f == 0 {
 				fv[i] = make([]interface{}, len(e.definition.Features))
@@ -44,4 +46,10 @@ func (e *Ensemble) Generate() *Vector {
 		}
 	}
 	return &fv
+}
+
+func ensembleIdToRNGSeed(ensembleId uuid.UUID) int64 {
+	hash := fnv.New64a()
+	hash.Write([]byte(ensembleId.String()))
+	return int64(hash.Sum64())
 }

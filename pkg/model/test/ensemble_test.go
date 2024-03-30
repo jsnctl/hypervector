@@ -24,3 +24,18 @@ func TestEnsemble(t *testing.T) {
 	assert.IsType(t, float64(0), (*results)[0][0])
 	assert.IsType(t, int(0.0), (*results)[0][1])
 }
+
+func TestEnsemble_Determinism(t *testing.T) {
+	definition := DefinitionFixture()
+	ensemble, _ := model.NewEnsemble(definition, 500)
+
+	runA := ensemble.Generate()
+	runB := ensemble.Generate()
+
+	assert.Equal(t, runA, runB)
+
+	ensemble_, _ := model.NewEnsemble(definition, 500)
+	runC := ensemble_.Generate()
+
+	assert.NotEqual(t, runA, runC)
+}
