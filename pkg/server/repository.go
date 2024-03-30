@@ -24,6 +24,7 @@ type InMemoryRepository struct {
 func NewInMemoryRepository() *InMemoryRepository {
 	inMemoryRepository := InMemoryRepository{}
 	inMemoryRepository.Definitions = make(map[uuid.UUID]*model.Definition)
+	inMemoryRepository.Ensembles = make(map[uuid.UUID]*model.Ensemble)
 	return &inMemoryRepository
 }
 

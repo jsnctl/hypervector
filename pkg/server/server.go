@@ -24,7 +24,6 @@ func NewServer(repository Repository) *Server {
 
 func (s *Server) bootstrapData() {
 	definition := model.NewDefinition("test")
-	definition.N = 1000
 	definition.Features = []*model.Feature{
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
 		model.NewFeature(model.FloatFeature, data.GaussianFactory(0.0, 10.0, data.GaussianType)),
@@ -33,12 +32,15 @@ func (s *Server) bootstrapData() {
 		model.NewFeature(model.FloatFeature, data.GaussianFactory(0.01, 0.5, data.GaussianType)),
 	}
 	(*s.Repository).AddDefinition(definition)
+	ensemble, _ := model.NewEnsemble(definition, 1000)
+	(*s.Repository).AddEnsemble(ensemble)
 }
 
 func (s *Server) RunServer() {
 	s.bootstrapData()
 	http.Handle("/definitions", allDefinitionsHandler(s.Repository))
 	http.Handle("/definition", definitionHandler(s.Repository))
+	http.Handle("/ensemble", ensembleHandler(s.Repository))
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 
@@ -69,9 +71,33 @@ func definitionHandler(repo *Repository) http.Handler {
 				fmt.Fprintf(w, err.Error())
 				return
 			}
+			js, err := json.Marshal(definition)
+			if err != nil {
+				println(err.Error())
+				return
+			}
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusCreated)
+			w.Write(js)
+		}
+	}
+	return http.HandlerFunc(fn)
+}
+
+func ensembleHandler(repo *Repository) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			ensemble, err := (*repo).GetEnsemble(r.URL.Query().Get("id"))
+			if err != nil {
+				println(err.Error())
+				fmt.Fprintf(w, err.Error())
+				return
+			}
 			toReturn := model.VectorResult{
-				Definition: definition.ID.String(),
-				Vector:     definition.Generate(),
+				EnsembleId:   ensemble.ID.String(),
+				DefinitionId: ensemble.DefinitionID.String(),
+				Vector:       ensemble.Generate(),
 			}
 			js, err := json.Marshal(toReturn)
 			if err != nil {
@@ -82,6 +108,7 @@ func definitionHandler(repo *Repository) http.Handler {
 			w.WriteHeader(http.StatusCreated)
 			w.Write(js)
 		}
+
 	}
 	return http.HandlerFunc(fn)
 }

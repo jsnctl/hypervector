@@ -13,8 +13,9 @@ func (r *Vector) Shape() (int, int) {
 }
 
 type VectorResult struct {
-	Definition string  `json:"definitionId"`
-	Vector     *Vector `json:"vector"`
+	EnsembleId   string  `json:"ensembleId""`
+	DefinitionId string  `json:"definitionId"`
+	Vector       *Vector `json:"vector"`
 }
 
 // Definition contains all metadata and statistical information to
