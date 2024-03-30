@@ -18,5 +18,12 @@ func Gaussian(N int, opts DistributionOpts) *Result {
 		result.Values = append(result.Values, x1*opts.Sigma+opts.Mu)
 		result.Values = append(result.Values, x2*opts.Sigma+opts.Mu)
 	}
+
+	// occasionally above N/2 shortens result.Values
+	if len(result.Values) != N {
+		randomResample := result.Values[rand.Intn(N)]
+		result.Values = append(result.Values, randomResample)
+	}
+
 	return &result
 }

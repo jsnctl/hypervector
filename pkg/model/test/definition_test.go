@@ -29,12 +29,16 @@ func DefinitionFixture() *model.Definition {
 			},
 		},
 	}
-	definition.Features = []*model.Feature{&featureA, &featureB}
+	featureC := model.Feature{
+		Type:         model.StringFeature,
+		Distribution: data.EqualWeightBoolean,
+	}
+	definition.Features = []*model.Feature{&featureA, &featureB, &featureC}
 	return definition
 }
 
 func TestDefinition(t *testing.T) {
 	definition := DefinitionFixture()
 	assert.IsType(t, &model.Definition{}, definition)
-	assert.Equal(t, len(definition.Features), 2)
+	assert.Equal(t, len(definition.Features), 3)
 }
