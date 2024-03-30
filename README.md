@@ -1,6 +1,6 @@
 # hypervector
 
-![hypie](./hypie.png)
+![hypie](./assets/hypie.png)
 
 **Status: 🔨 Pre-first release**
 
@@ -13,7 +13,7 @@ detect specific regressions related to input data sub-populations.
 
 ## Use
 
-![image](https://github.com/jsnctl/hypervector/assets/25587856/ce3a40cd-3cb2-411a-a4ae-c16bf72101a6)
+![flowchart](./assets/flowchart.png)
 
 ## Build
 
