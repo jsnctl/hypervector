@@ -4,6 +4,8 @@ import (
 	"github.com/google/uuid"
 )
 
+// Ensemble corresponds to a single test fixture instance of
+// a Definition. A given Ensemble returns the same data every time
 type Ensemble struct {
 	ID           uuid.UUID `json:"id"`
 	DefinitionID uuid.UUID `json:"definitionId"`

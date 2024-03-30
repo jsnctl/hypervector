@@ -2,6 +2,8 @@ package data
 
 type DistributionType string
 
+// Distribution defines the statistical properites of a given column
+// of the feature vector returned by the fixture
 type Distribution struct {
 	Type       DistributionType `json:"type"`
 	Parameters DistributionOpts `json:"parameters"`

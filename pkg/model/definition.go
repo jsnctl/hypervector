@@ -17,6 +17,8 @@ type VectorResult struct {
 	Vector     *Vector `json:"vector"`
 }
 
+// Definition contains all metadata and statistical information to
+// generate a test data fixture
 type Definition struct {
 	ID        uuid.UUID   `json:"id"`
 	Name      string      `json:"name"`

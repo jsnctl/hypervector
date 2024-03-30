@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+// Project is the top-level organisational unit, consisting
+// of a collection of N definitions
 type Project struct {
 	ID          uuid.UUID `json:"id"`
 	Name        string
@@ -20,6 +22,8 @@ func NewProject(name string) *Project {
 	return &project
 }
 
+// Feature provides the metadata of a given column of the returned
+// feature vector of the fixture
 type Feature struct {
 	ID           uuid.UUID         `json:"id"`
 	Type         FeatureType       `json:"type"`
