@@ -14,6 +14,7 @@ func (r *Vector) Shape() (int, int) {
 type VectorResult struct {
 	EnsembleId   string  `json:"ensembleId""`
 	DefinitionId string  `json:"definitionId"`
+	N            int     `json:"N"`
 	Vector       *Vector `json:"vector"`
 }
 
@@ -23,9 +24,8 @@ type Definition struct {
 	ID        uuid.UUID   `json:"id"`
 	Name      string      `json:"name"`
 	Added     time.Time   `json:"added"`
-	N         int         `json:"N"`
-	Features  []*Feature  `json:"features"`
 	Ensembles []uuid.UUID `json:"ensembles"`
+	Features  []*Feature  `json:"features"`
 }
 
 func NewDefinition(name string) *Definition {

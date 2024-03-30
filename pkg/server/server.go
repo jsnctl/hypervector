@@ -38,6 +38,7 @@ func (s *Server) bootstrapData() {
 }
 
 func (s *Server) RunServer() {
+	fmt.Println("hypervector is up!")
 	s.bootstrapData()
 	http.Handle("/definitions", allDefinitionsHandler(s.Repository))
 	http.Handle("/definition", definitionHandler(s.Repository))
@@ -98,6 +99,7 @@ func ensembleHandler(repo *Repository) http.Handler {
 			toReturn := model.VectorResult{
 				EnsembleId:   ensemble.ID.String(),
 				DefinitionId: ensemble.DefinitionID.String(),
+				N:            ensemble.N,
 				Vector:       ensemble.Generate(),
 			}
 			js, err := json.Marshal(toReturn)
