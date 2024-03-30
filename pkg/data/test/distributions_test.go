@@ -44,7 +44,18 @@ func TestCategoryChoice(t *testing.T) {
 		Seed:       seed,
 		Categories: categories,
 	})
-	res := distribution.GetString()
+	vector := distribution.GetString()
 
-	assert.NotNil(t, res)
+	assert.NotNil(t, vector)
+
+	var falseCount int
+	for _, value := range *vector {
+		if value == "False" {
+			falseCount += 1
+		}
+	}
+	propFalse := float64(falseCount) / float64(N)
+
+	assert.True(t, helpers.IsApproxEqual(0.2, 1-propFalse, 0.05))
+	assert.True(t, helpers.IsApproxEqual(0.8, propFalse, 0.05))
 }

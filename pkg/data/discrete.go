@@ -31,16 +31,6 @@ func generateChoiceSlice(choices []Category) []Category {
 	return choiceSlice
 }
 
-var EqualWeightBoolean = Distribution{
-	Type: CategoricalType,
-	Parameters: DistributionOpts{
-		Categories: []Category{
-			{"True", 0.5},
-			{"False", 0.5},
-		},
-	},
-}
-
 func DiscreteGaussian(N int, opts DistributionOpts) *Result {
 	continuous := Gaussian(N, opts)
 	for i, value := range continuous.Values {
