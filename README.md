@@ -8,3 +8,17 @@ on machine learning and data science components.
 It makes configuring & generating high dimensional feature vectors easy, and provides data populations for testing
 deterministically over HTTP. Output from your function under test can also be hashed and stored for future assertion to
 detect specific regressions related to input data sub-populations.
+
+## Build
+
+You can run the test suite and build a local binary (useful for development) with:
+
+```bash
+make all
+```
+
+Building and running a Docker image is done with:
+
+```bash
+make docker
+```
