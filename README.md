@@ -5,8 +5,7 @@
 **Status: 🔨 Pre-first release**
 
 Hypervector is a test data fixture engine intended for data-intensive production systems such as those reliant
-on machine learning and data science components. It makes configuring & generating high dimensional feature 
-vector fixtures for testing easy and repeatable.
+on machine learning and data science components.
 
 ## Use
 
