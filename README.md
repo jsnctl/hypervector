@@ -11,6 +11,10 @@ It makes configuring & generating high dimensional feature vectors easy, and pro
 deterministically over HTTP. Output from your function under test can also be hashed and stored for future assertion to
 detect specific regressions related to input data sub-populations.
 
+## Use
+
+![image](https://github.com/jsnctl/hypervector/assets/25587856/ce3a40cd-3cb2-411a-a4ae-c16bf72101a6)
+
 ## Build
 
 You can run the test suite and build a local binary (useful for development) with:
