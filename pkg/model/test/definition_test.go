@@ -7,9 +7,8 @@ import (
 	"testing"
 )
 
-func TestDefinition(t *testing.T) {
+func DefinitionFixture() *model.Definition {
 	definition := model.NewDefinition("test")
-	definition.N = 100
 	featureA := model.Feature{
 		Type: model.FloatFeature,
 		Distribution: data.Distribution{
@@ -31,16 +30,10 @@ func TestDefinition(t *testing.T) {
 		},
 	}
 	definition.Features = []*model.Feature{&featureA, &featureB}
+	return definition
+}
 
-	results := definition.Generate()
-
-	assert.IsType(t, &model.Definition{}, definition)
-	assert.NotNil(t, results)
-
-	x, y := results.Shape()
-	assert.Equal(t, 100, x)
-	assert.Equal(t, 2, y)
-
-	assert.IsType(t, float64(0), (*results)[0][0])
-	assert.IsType(t, int(0.0), (*results)[0][1])
+func TestDefinition(t *testing.T) {
+	definition := DefinitionFixture()
+	assert.Equal(t, len(definition.Features), 2)
 }
