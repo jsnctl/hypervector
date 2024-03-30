@@ -13,6 +13,8 @@ type Repository interface {
 
 	AddEnsemble(ensemble *model.Ensemble)
 	GetEnsemble(id string) (*model.Ensemble, error)
+
+	Overwrite(*[]model.Definition)
 }
 
 type InMemoryRepository struct {
@@ -28,11 +30,20 @@ func NewInMemoryRepository() *InMemoryRepository {
 	return &inMemoryRepository
 }
 
-func (r InMemoryRepository) AddDefinition(definition *model.Definition) {
+func (r *InMemoryRepository) Overwrite(newDefinitions *[]model.Definition) {
+	for k := range r.Definitions {
+		delete(r.Definitions, k)
+	}
+	for _, definition := range *newDefinitions {
+		r.Definitions[definition.ID] = &definition
+	}
+}
+
+func (r *InMemoryRepository) AddDefinition(definition *model.Definition) {
 	r.Definitions[definition.ID] = definition
 }
 
-func (r InMemoryRepository) GetDefinition(id string) (*model.Definition, error) {
+func (r *InMemoryRepository) GetDefinition(id string) (*model.Definition, error) {
 	uuidFromString, err := uuid.Parse(id)
 	if err != nil {
 		return nil, errors.New("id was not a valid UUID")
@@ -44,7 +55,7 @@ func (r InMemoryRepository) GetDefinition(id string) (*model.Definition, error) 
 	return nil, errors.New("definition not found")
 }
 
-func (r InMemoryRepository) GetAllDefinitions() []model.Definition {
+func (r *InMemoryRepository) GetAllDefinitions() []model.Definition {
 	var definitions []model.Definition
 	for _, v := range r.Definitions {
 		definitions = append(definitions, *v)
@@ -52,13 +63,13 @@ func (r InMemoryRepository) GetAllDefinitions() []model.Definition {
 	return definitions
 }
 
-func (r InMemoryRepository) AddEnsemble(ensemble *model.Ensemble) {
+func (r *InMemoryRepository) AddEnsemble(ensemble *model.Ensemble) {
 	r.Ensembles[ensemble.ID] = ensemble
 	parent, _ := r.GetDefinition(ensemble.DefinitionID.String())
 	parent.Ensembles = append(parent.Ensembles, ensemble.ID)
 }
 
-func (r InMemoryRepository) GetEnsemble(id string) (*model.Ensemble, error) {
+func (r *InMemoryRepository) GetEnsemble(id string) (*model.Ensemble, error) {
 	uuidFromString, err := uuid.Parse(id)
 	if err != nil {
 		return nil, errors.New("id was not a valid UUID")

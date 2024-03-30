@@ -1,0 +1,21 @@
+definitions:
+  - name: example
+    features:
+      - type: "FLOAT"
+        distribution:
+          type: "GAUSSIAN"
+          parameters:
+            mu: 10.0
+            sigma: 2.0
+      - type: "FLOAT"
+        distribution:
+          type: "GAUSSIAN"
+          parameters:
+            mu: 15.0
+            sigma: 2.0
+      - type: "FLOAT"
+        distribution:
+          type: "GAUSSIAN"
+          parameters:
+            mu: 2.0
+            sigma: 2.0

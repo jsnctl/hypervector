@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/jsnctl/hypervector/pkg/data"
 	"github.com/jsnctl/hypervector/pkg/model"
+	"gopkg.in/yaml.v3"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Server struct {
@@ -40,6 +42,11 @@ func (s *Server) bootstrapData() {
 func (s *Server) RunServer() {
 	fmt.Println("hypervector is up!")
 	s.bootstrapData()
+	others := ReadFromYaml()
+	if others.Definitions != nil {
+		println("reading from YAML")
+		(*s.Repository).Overwrite(&others.Definitions)
+	}
 	http.Handle("/definitions", allDefinitionsHandler(s.Repository))
 	http.Handle("/definition", definitionHandler(s.Repository))
 	http.Handle("/ensemble", ensembleHandler(s.Repository))
@@ -114,4 +121,15 @@ func ensembleHandler(repo *Repository) http.Handler {
 
 	}
 	return http.HandlerFunc(fn)
+}
+
+func ReadFromYaml() *YAMLConfig {
+	var definitions YAMLConfig
+	file, _ := os.ReadFile("example.yaml")
+	yaml.Unmarshal(file, &definitions)
+	return &definitions
+}
+
+type YAMLConfig struct {
+	Definitions []model.Definition `yaml:"definitions"`
 }

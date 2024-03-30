@@ -16,9 +16,9 @@ const (
 )
 
 type DistributionOpts struct {
-	Mu         float64 `json:"mu"`
-	Sigma      float64 `json:"sigma"`
-	Categories []Category
+	Mu         float64    `json:"mu,omitempty"`
+	Sigma      float64    `json:"sigma,omitempty"`
+	Categories []Category `json:"categories,omitempty"`
 }
 
 type Result struct {
