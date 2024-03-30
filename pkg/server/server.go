@@ -30,6 +30,7 @@ func (s *Server) bootstrapData() {
 		model.NewFeature(model.IntegerFeature, data.GaussianFactory(10.0, 50.0, data.DiscreteGaussianType)),
 		model.NewFeature(model.FloatFeature, data.IdentityGaussianDistribution),
 		model.NewFeature(model.FloatFeature, data.GaussianFactory(0.01, 0.5, data.GaussianType)),
+		model.NewFeature(model.StringFeature, data.EqualWeightBoolean),
 	}
 	(*s.Repository).AddDefinition(definition)
 	ensemble, _ := model.NewEnsemble(definition, 1000)
