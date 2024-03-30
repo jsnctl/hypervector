@@ -35,5 +35,6 @@ func DefinitionFixture() *model.Definition {
 
 func TestDefinition(t *testing.T) {
 	definition := DefinitionFixture()
+	assert.IsType(t, &model.Definition{}, definition)
 	assert.Equal(t, len(definition.Features), 2)
 }

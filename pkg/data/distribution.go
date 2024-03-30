@@ -34,6 +34,14 @@ func (r *Result) GetFloat64() *[]float64 {
 	return &floats
 }
 
+func (r *Result) GetString() *[]string {
+	strings := make([]string, len(r.Values))
+	for i, value := range r.Values {
+		strings[i] = value.(string)
+	}
+	return &strings
+}
+
 var DistributionLookup = map[DistributionType]func(int, DistributionOpts) *Result{
 	GaussianType:         Gaussian,
 	DiscreteGaussianType: DiscreteGaussian,

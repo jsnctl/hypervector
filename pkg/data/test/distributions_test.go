@@ -31,3 +31,20 @@ func TestGaussian(t *testing.T) {
 
 	assert.True(t, helpers.IsApproxEqual(mu, meanOfMeans, 2e-2)) // previously 1e-2
 }
+
+func TestCategoryChoice(t *testing.T) {
+	categories := []data.Category{
+		{Value: "True", Probability: 0.2},
+		{Value: "False", Probability: 0.8},
+	}
+	N := 5000 + rand.Intn(1000)
+	seed := int64(rand.Int())
+
+	distribution := data.CategoryChoice(N, data.DistributionOpts{
+		Seed:       seed,
+		Categories: categories,
+	})
+	res := distribution.GetString()
+
+	assert.NotNil(t, res)
+}

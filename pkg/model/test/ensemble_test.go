@@ -14,7 +14,7 @@ func TestEnsemble(t *testing.T) {
 
 	results := ensemble.Generate()
 
-	assert.IsType(t, &model.Definition{}, definition)
+	assert.IsType(t, &model.Ensemble{}, ensemble)
 	assert.NotNil(t, results)
 
 	x, y := results.Shape()
