@@ -21,9 +21,9 @@ func Gaussian(N int, opts DistributionOpts) *Result {
 	return &result
 }
 
-func GaussianFactory(mu float64, sigma float64) Distribution {
+func GaussianFactory(mu float64, sigma float64, gaussianType DistributionType) Distribution {
 	return Distribution{
-		Type: GaussianType,
+		Type: gaussianType,
 		Parameters: DistributionOpts{
 			Mu:    mu,
 			Sigma: sigma,
@@ -31,4 +31,4 @@ func GaussianFactory(mu float64, sigma float64) Distribution {
 	}
 }
 
-var IdentityGaussianDistribution = GaussianFactory(0.0, 1.0)
+var IdentityGaussianDistribution = GaussianFactory(0.0, 1.0, GaussianType)
