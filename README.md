@@ -13,7 +13,7 @@ detect specific regressions related to input data sub-populations.
 
 ## Use
 
-![flowchart](./assets/flowchart.png)
+<img src="./assets/flowchart.png" width=75%>
 
 ## Build
 
