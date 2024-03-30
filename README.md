@@ -19,7 +19,7 @@ Hypervector naturally sits alongside your integration and smoke test infrastruct
 during continuous integration stages, and makes large high-dimensional feature vectors
 available via endpoint.
 
-<img src="./assets/flowchart-benchmark.png" width=85%>
+<img src="./assets/flowchart-benchmark.png" width=90%>
 
 The service allows for benchmarks to be saved alongside feature vectors which can be 
 asserted by test runners to provide a sophisticated regression testing framework for
