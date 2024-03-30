@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/jsnctl/hypervector/pkg/data"
 	"github.com/jsnctl/hypervector/pkg/model"
 	"log"
@@ -62,14 +61,9 @@ func allDefinitionsHandler(repo *Repository) http.Handler {
 
 func definitionHandler(repo *Repository) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-
 		switch r.Method {
 		case http.MethodGet:
-			id, err := uuid.Parse(r.URL.Query().Get("id"))
-			if err != nil {
-				println(err.Error())
-			}
-			definition, err := (*repo).GetDefinition(id)
+			definition, err := (*repo).GetDefinition(r.URL.Query().Get("id"))
 			if err != nil {
 				println(err.Error())
 				fmt.Fprintf(w, err.Error())

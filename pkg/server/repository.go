@@ -8,13 +8,17 @@ import (
 
 type Repository interface {
 	AddDefinition(definition *model.Definition)
-	GetDefinition(id uuid.UUID) (*model.Definition, error)
+	GetDefinition(id string) (*model.Definition, error)
 	GetAllDefinitions() []model.Definition
+
+	AddEnsemble(ensemble *model.Ensemble)
+	GetEnsemble(id string) (*model.Ensemble, error)
 }
 
 type InMemoryRepository struct {
 	R           Repository
 	Definitions map[uuid.UUID]*model.Definition
+	Ensembles   map[uuid.UUID]*model.Ensemble
 }
 
 func NewInMemoryRepository() *InMemoryRepository {
@@ -27,8 +31,12 @@ func (r InMemoryRepository) AddDefinition(definition *model.Definition) {
 	r.Definitions[definition.ID] = definition
 }
 
-func (r InMemoryRepository) GetDefinition(id uuid.UUID) (*model.Definition, error) {
-	definition, ok := r.Definitions[id]
+func (r InMemoryRepository) GetDefinition(id string) (*model.Definition, error) {
+	uuidFromString, err := uuid.Parse(id)
+	if err != nil {
+		return nil, errors.New("id was not a valid UUID")
+	}
+	definition, ok := r.Definitions[uuidFromString]
 	if ok {
 		return definition, nil
 	}
@@ -41,4 +49,22 @@ func (r InMemoryRepository) GetAllDefinitions() []model.Definition {
 		definitions = append(definitions, *v)
 	}
 	return definitions
+}
+
+func (r InMemoryRepository) AddEnsemble(ensemble *model.Ensemble) {
+	r.Ensembles[ensemble.ID] = ensemble
+	parent, _ := r.GetDefinition(ensemble.DefinitionID.String())
+	parent.Ensembles = append(parent.Ensembles, ensemble.ID)
+}
+
+func (r InMemoryRepository) GetEnsemble(id string) (*model.Ensemble, error) {
+	uuidFromString, err := uuid.Parse(id)
+	if err != nil {
+		return nil, errors.New("id was not a valid UUID")
+	}
+	ensemble, ok := r.Ensembles[uuidFromString]
+	if ok {
+		return ensemble, nil
+	}
+	return nil, errors.New("definition not found")
 }

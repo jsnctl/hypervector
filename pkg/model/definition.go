@@ -18,11 +18,12 @@ type VectorResult struct {
 }
 
 type Definition struct {
-	ID       uuid.UUID  `json:"id"`
-	Name     string     `json:"name"`
-	Added    time.Time  `json:"added"`
-	N        int        `json:"N"`
-	Features []*Feature `json:"features"`
+	ID        uuid.UUID   `json:"id"`
+	Name      string      `json:"name"`
+	Added     time.Time   `json:"added"`
+	N         int         `json:"N"`
+	Features  []*Feature  `json:"features"`
+	Ensembles []uuid.UUID `json:"ensembles"`
 }
 
 func NewDefinition(name string) *Definition {
