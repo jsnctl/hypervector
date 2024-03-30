@@ -13,17 +13,17 @@ detect specific regressions related to input data sub-populations.
 
 ## Use
 
-<img src="./assets/flowchart.png" width=85%>
-
-Hypervector naturally sits alongside your integration and smoke test infrastructure
+Hypervector sits naturally alongside your integration and smoke test infrastructure
 during continuous integration stages, and makes large high-dimensional feature vectors
 available via endpoint.
 
-<img src="./assets/flowchart-benchmark.png" width=90%>
+<img src="./assets/flowchart.png" width=85%>
 
-The service allows for benchmarks to be saved alongside feature vectors which can be 
-asserted by test runners to provide a sophisticated regression testing framework for
+The service allows for benchmarks to be saved alongside their parent feature vectors. These can be 
+asserted by test runners  via the Hypervector API, providing a sophisticated regression testing framework for
 statistical properties of your fixtures.
+
+<img src="./assets/flowchart-benchmark.png" width=86%>
 
 ## Build
 
