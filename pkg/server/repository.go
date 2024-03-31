@@ -36,6 +36,8 @@ func (r *InMemoryRepository) Overwrite(newDefinitions *[]model.Definition) {
 	}
 	for _, definition := range *newDefinitions {
 		r.Definitions[definition.ID] = &definition
+		ensemble, _ := model.NewEnsemble(&definition, 1000)
+		r.AddEnsemble(ensemble)
 	}
 }
 

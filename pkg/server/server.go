@@ -60,6 +60,8 @@ func (s *Server) RunServer() {
 	if yamlData == nil {
 		log.Println("reading from YAML failed - using bootstrapped data")
 		s.bootstrapData()
+	} else {
+		(*s.Repository).Overwrite(&yamlData.Definitions)
 	}
 	http.Handle("/definitions", allDefinitionsHandler(s.Repository))
 	http.Handle("/definition", definitionHandler(s.Repository))
@@ -74,6 +76,7 @@ func allDefinitionsHandler(repo *Repository) http.Handler {
 		switch r.Method {
 		case http.MethodGet:
 			definitions := (*repo).GetAllDefinitions()
+			log.Println(definitions)
 			js, err := json.Marshal(definitions)
 			if err != nil {
 				println(err.Error())

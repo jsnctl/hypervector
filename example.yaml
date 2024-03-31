@@ -19,3 +19,10 @@ definitions:
           parameters:
             mu: 2.0
             sigma: 2.0
+      - type: "STRING"
+        distribution:
+          type: "CATEGORICAL"
+          parameters:
+            categories:
+              - {Value: "True", Probability: 0.2}
+              - {Value: "False", Probability: 0.8}
