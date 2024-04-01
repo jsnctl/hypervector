@@ -76,7 +76,6 @@ func allDefinitionsHandler(repo *Repository) http.Handler {
 		switch r.Method {
 		case http.MethodGet:
 			definitions := (*repo).GetAllDefinitions()
-			log.Println(definitions)
 			js, err := json.Marshal(definitions)
 			if err != nil {
 				println(err.Error())

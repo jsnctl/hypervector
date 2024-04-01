@@ -35,13 +35,21 @@ func (r *InMemoryRepository) Overwrite(newDefinitions *[]model.Definition) {
 		delete(r.Definitions, k)
 	}
 	for _, definition := range *newDefinitions {
-		r.Definitions[definition.ID] = &definition
+		for _, feature := range definition.Features {
+			if feature.ID == uuid.Nil {
+				feature.ID = uuid.New()
+			}
+		}
+		r.AddDefinition(&definition)
 		ensemble, _ := model.NewEnsemble(&definition, 1000)
 		r.AddEnsemble(ensemble)
 	}
 }
 
 func (r *InMemoryRepository) AddDefinition(definition *model.Definition) {
+	if definition.ID == uuid.Nil {
+		definition.ID = uuid.New()
+	}
 	r.Definitions[definition.ID] = definition
 }
 

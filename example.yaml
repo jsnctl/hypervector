@@ -7,12 +7,12 @@ definitions:
           parameters:
             mu: 10.0
             sigma: 2.0
-      - type: "FLOAT"
+      - type: "INTEGER"
         distribution:
-          type: "GAUSSIAN"
+          type: "DISCRETE_GAUSSIAN"
           parameters:
-            mu: 15.0
-            sigma: 2.0
+            mu: 15
+            sigma: 2
       - type: "FLOAT"
         distribution:
           type: "GAUSSIAN"
@@ -24,5 +24,44 @@ definitions:
           type: "CATEGORICAL"
           parameters:
             categories:
-              - {Value: "True", Probability: 0.2}
-              - {Value: "False", Probability: 0.8}
+              - {value: "True", probability: 0.2}
+              - {value: "False", probability: 0.8}
+      - type: "FLOAT"
+        distribution:
+          type: "GAUSSIAN"
+          parameters:
+            mu: 100.0
+            sigma: 2.5
+      - type: "INTEGER"
+        distribution:
+          type: "DISCRETE_GAUSSIAN"
+          parameters:
+            mu: 15
+            sigma: 2
+      - type: "FLOAT"
+        distribution:
+          type: "GAUSSIAN"
+          parameters:
+            mu: 0.0
+            sigma: 2.0
+      - type: "STRING"
+        distribution:
+          type: "CATEGORICAL"
+          parameters:
+            categories:
+              - { value: "ON", probability: 0.45 }
+              - { value: "OFF", probability: 0.55 }
+      - type: "FLOAT"
+        distribution:
+          type: "GAUSSIAN"
+          parameters:
+            mu: -10.0
+            sigma: 20.5
+      - type: "STRING"
+        distribution:
+          type: "CATEGORICAL"
+          parameters:
+            categories:
+              - { value: "VALID", probability: 0.6 }
+              - { value: "INVALID", probability: 0.2 }
+              - { value: "UNKNOWN", probability: 0.2 }
