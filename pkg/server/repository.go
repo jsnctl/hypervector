@@ -12,9 +12,9 @@ type Repository interface {
 	GetAllDefinitions() []model.Definition
 
 	AddEnsemble(ensemble *model.Ensemble)
-	GetEnsemble(id string) (*model.Ensemble, error)
+	GetEnsemble(parentDefinition string, ensembleId int) (*model.Ensemble, error)
 
-	Overwrite(*[]model.Definition)
+	Overwrite([]*model.Definition)
 }
 
 type InMemoryRepository struct {
@@ -30,19 +30,17 @@ func NewInMemoryRepository() *InMemoryRepository {
 	return &inMemoryRepository
 }
 
-func (r *InMemoryRepository) Overwrite(newDefinitions *[]model.Definition) {
+func (r *InMemoryRepository) Overwrite(newDefinitions []*model.Definition) {
 	for k := range r.Definitions {
 		delete(r.Definitions, k)
 	}
-	for _, definition := range *newDefinitions {
+	for _, definition := range newDefinitions {
 		for _, feature := range definition.Features {
 			if feature.ID == uuid.Nil {
 				feature.ID = uuid.New()
 			}
 		}
-		r.AddDefinition(&definition)
-		ensemble, _ := model.NewEnsemble(&definition, 1000)
-		r.AddEnsemble(ensemble)
+		r.AddDefinition(definition)
 	}
 }
 
@@ -74,19 +72,15 @@ func (r *InMemoryRepository) GetAllDefinitions() []model.Definition {
 }
 
 func (r *InMemoryRepository) AddEnsemble(ensemble *model.Ensemble) {
-	r.Ensembles[ensemble.ID] = ensemble
 	parent, _ := r.GetDefinition(ensemble.DefinitionID.String())
-	parent.Ensembles = append(parent.Ensembles, ensemble.ID)
+	parent.Ensembles = append(parent.Ensembles, ensemble)
 }
 
-func (r *InMemoryRepository) GetEnsemble(id string) (*model.Ensemble, error) {
-	uuidFromString, err := uuid.Parse(id)
+func (r *InMemoryRepository) GetEnsemble(parentDefinition string, ensembleId int) (*model.Ensemble, error) {
+	definition, err := r.GetDefinition(parentDefinition)
 	if err != nil {
-		return nil, errors.New("id was not a valid UUID")
+		return nil, errors.New("definition of ensemble not found")
 	}
-	ensemble, ok := r.Ensembles[uuidFromString]
-	if ok {
-		return ensemble, nil
-	}
-	return nil, errors.New("definition not found")
+	ensemble := definition.Ensembles[ensembleId]
+	return ensemble, nil
 }

@@ -4,33 +4,40 @@ import (
 	"github.com/google/uuid"
 	"github.com/jsnctl/hypervector/pkg/data"
 	"hash/fnv"
+	"strconv"
 )
 
 // Ensemble corresponds to a single test fixture instance of
 // a Definition. A given Ensemble returns the same data every time
 type Ensemble struct {
-	ID           uuid.UUID `json:"id"`
+	ID           int `json:"id"`
 	definition   *Definition
-	DefinitionID uuid.UUID `json:"definitionId"`
+	DefinitionID uuid.UUID `json:"-"`
 	N            int       `json:"N"`
 }
 
-func NewEnsemble(definition *Definition, N int) (*Ensemble, error) {
+func NewEnsemble(definition *Definition, N int) *Ensemble {
 	ensemble := Ensemble{
 		definition:   definition,
 		DefinitionID: definition.ID,
 		N:            N,
 	}
-	ensemble.ID = uuid.New()
+	definition.Ensembles = append(definition.Ensembles, &ensemble)
+	ensemble.ID = len(definition.Ensembles) + 1
+	return &ensemble
+}
 
-	return &ensemble, nil
+func (e *Ensemble) HydrateEnsemble(parent *Definition, index int) {
+	e.definition = parent
+	e.DefinitionID = parent.ID
+	e.ID = index
 }
 
 func (e *Ensemble) Generate() *Vector {
 	fv := make(Vector, e.N)
 	for f, feature := range e.definition.Features {
 		fn := data.DistributionLookup[feature.Distribution.Type]
-		seed := ensembleIdToRNGSeed(e.ID)
+		seed := ensembleToRNGSeed(e)
 		distribution := fn(e.N, seed, feature.Distribution.Parameters)
 		for i, value := range distribution.Values {
 			if f == 0 {
@@ -48,8 +55,10 @@ func (e *Ensemble) Generate() *Vector {
 	return &fv
 }
 
-func ensembleIdToRNGSeed(ensembleId uuid.UUID) int64 {
+func ensembleToRNGSeed(ensemble *Ensemble) int64 {
+	// hashes increment ID and N as deterministic seed
+	stringToHash := strconv.Itoa(ensemble.ID) + "-" + strconv.Itoa(ensemble.N)
 	hash := fnv.New64a()
-	hash.Write([]byte(ensembleId.String()))
+	hash.Write([]byte(stringToHash))
 	return int64(hash.Sum64())
 }

@@ -1,5 +1,8 @@
 definitions:
   - name: example
+    ensembles:
+      - n: 1000
+      - n: 5000
     features:
       - type: "FLOAT"
         distribution:

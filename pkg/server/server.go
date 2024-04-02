@@ -3,12 +3,14 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/jsnctl/hypervector/pkg/data"
 	"github.com/jsnctl/hypervector/pkg/model"
 	"gopkg.in/yaml.v3"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Server struct {
@@ -35,8 +37,7 @@ func (s *Server) bootstrapData() {
 		model.NewFeature(model.StringFeature, data.EqualWeightBoolean),
 	}
 	(*s.Repository).AddDefinition(definition)
-	ensemble, _ := model.NewEnsemble(definition, 1000)
-	(*s.Repository).AddEnsemble(ensemble)
+	model.NewEnsemble(definition, 1000)
 }
 
 func readFromYaml() *YAMLConfig {
@@ -47,11 +48,22 @@ func readFromYaml() *YAMLConfig {
 		return nil
 	}
 	yaml.Unmarshal(file, &definitions)
+	definitions.hydrate()
 	return &definitions
 }
 
+func (y *YAMLConfig) hydrate() {
+	for _, definition := range y.Definitions {
+		definition.ID = uuid.New()
+		definition.Added = time.Now()
+		for i, ensemble := range definition.Ensembles {
+			ensemble.HydrateEnsemble(definition, i)
+		}
+	}
+}
+
 type YAMLConfig struct {
-	Definitions []model.Definition `yaml:"definitions"`
+	Definitions []*model.Definition `yaml:"definitions"`
 }
 
 func (s *Server) RunServer() {
@@ -61,11 +73,11 @@ func (s *Server) RunServer() {
 		log.Println("reading from YAML failed - using bootstrapped data")
 		s.bootstrapData()
 	} else {
-		(*s.Repository).Overwrite(&yamlData.Definitions)
+		(*s.Repository).Overwrite(yamlData.Definitions)
 	}
 	http.Handle("/definitions", allDefinitionsHandler(s.Repository))
 	http.Handle("/definition", definitionHandler(s.Repository))
-	http.Handle("/ensemble", ensembleHandler(s.Repository))
+	http.Handle("/ensemble/*", ensembleHandler(s.Repository))
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 
@@ -113,14 +125,15 @@ func ensembleHandler(repo *Repository) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			ensemble, err := (*repo).GetEnsemble(r.URL.Query().Get("id"))
+			log.Println(r.URL.Path)
+			ensemble, err := (*repo).GetEnsemble(r.URL.Query().Get("id"), 0)
 			if err != nil {
 				println(err.Error())
 				fmt.Fprintf(w, err.Error())
 				return
 			}
 			toReturn := model.VectorResult{
-				EnsembleId:   ensemble.ID.String(),
+				EnsembleId:   ensemble.ID,
 				DefinitionId: ensemble.DefinitionID.String(),
 				N:            ensemble.N,
 				Vector:       ensemble.Generate(),

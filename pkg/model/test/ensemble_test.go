@@ -10,7 +10,7 @@ import (
 func TestEnsemble(t *testing.T) {
 	N := rand.Intn(5000)
 	definition := DefinitionFixture()
-	ensemble, _ := model.NewEnsemble(definition, N)
+	ensemble := model.NewEnsemble(definition, N)
 
 	results := ensemble.Generate()
 
@@ -27,14 +27,14 @@ func TestEnsemble(t *testing.T) {
 
 func TestEnsemble_Determinism(t *testing.T) {
 	definition := DefinitionFixture()
-	ensemble, _ := model.NewEnsemble(definition, 500)
+	ensemble := model.NewEnsemble(definition, 500)
 
 	runA := ensemble.Generate()
 	runB := ensemble.Generate()
 
 	assert.Equal(t, runA, runB)
 
-	ensemble_, _ := model.NewEnsemble(definition, 500)
+	ensemble_ := model.NewEnsemble(definition, 500)
 	runC := ensemble_.Generate()
 
 	assert.NotEqual(t, runA, runC)
